@@ -8,11 +8,11 @@
 #ifndef SERIAL_H_
 #define SERIAL_H_
 
-int serial_init(unsigned int baud_rate);
-int serial_putc(const char c);
-int serial_puts(const char *string);
-int serial_write(const char *string, int len);
-int serial_getc(char *c);
+void serial_init(unsigned int baud_rate);
+void serial_putc(const char c);
+void serial_puts(const char *string);
+void serial_write(const char *string, int len);
+void serial_getc(char *c);
 
 
 #endif /* SERIAL_H_ */

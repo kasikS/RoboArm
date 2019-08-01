@@ -10,11 +10,11 @@
 #include <avr/io.h>
 
 /**
- * Initializes the serial port with requested baud rate.
- * @param baud_rate is the baud rate to be used with the serial port.
- * @return false in case of error.
+ * \brief Initializes the serial port with requested baud rate.
+ *
+ * \param baud_rate is the baud rate to be used with the serial port.
  */
-int serial_init(unsigned int baud_rate) //configurable frame format? which uart?
+void serial_init(unsigned int baud_rate) //configurable frame format? which uart?
 {
 	/*	Set baud rate */
 	uint16_t baudrate = F_CPU/16/baud_rate-1;
@@ -26,26 +26,24 @@ int serial_init(unsigned int baud_rate) //configurable frame format? which uart?
 
 	/* 	Set frame format: 8data, 1stop bit */
 	UCSR0C = 3<<UCSZ00;
-	return 0;
 }
 
 /**
- * Sends a single character through the serial port.
- * @param c is the character to be sent.
- * @return false in case of error.
+ *\brief  Sends a single character through the serial port.
+ *
+ * \param c is the character to be sent.
  */
-int serial_putc(const char c)
+void serial_putc(const char c)
 {
 	UDR0 = c;
-	return 0;
 }
 
 /**
- * Sends a null-terminated string through the serial port.
- * @param string is the data to be sent.
- * @return false in case of error.
+ * \brief Sends a null-terminated string through the serial port.
+ *
+ * \param string is the data to be sent.
  */
-int serial_puts(const char *string)
+void serial_puts(const char *string)
 {
 	while(*string)
 	{
@@ -56,16 +54,15 @@ int serial_puts(const char *string)
 		serial_putc(*string);
 		++string;
 	}
-	return 0;
 }
 
 /**
- * Sends a specified number of characters through the serial port.
- * @param string is the data to be sent.
- * @param len is number of characters to be sent.
- * @return false in case of error.
+ * \brief Sends a specified number of characters through the serial port.
+ *
+ * \param string is the data to be sent.
+ * \param len is number of characters to be sent.
  */
-int serial_write(const char *string, int len)
+void serial_write(const char *string, int len)
 {
 	int i;
 	for(i=0; i<len; i++)
@@ -77,20 +74,16 @@ int serial_write(const char *string, int len)
 		serial_putc(*string);
 		++string;
 	}
-	return 0;
 }
 
 /**
- * Receives a single character from the serial port.
- * @param c is a pointer to the variable where the read character will be saved.
- * If there is nothing in the buffer, it will not modified.
- * @return true if a character was received.
+ * \brief Receives a single character from the serial port.
+ *
+ * \param c is a pointer to the variable where the read character will be saved.
  */
-int serial_getc(char *c) // TODO handle by innterrupts
+void serial_getc(char *c) // TODO handle by interrupts
 {
 	while(!(UCSR0A & (1<<RXC0)));
 
 	*c = UDR0;
-
-	return 0;
 }
