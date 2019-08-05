@@ -35,9 +35,9 @@ typedef enum
 	Output
 }GPIOMode;
 
-void GPIO_init(GPIOPort Portx, uint8_t Pin, GPIOMode Mode);
-void GPIO_set_bits(GPIOPort Portx, uint16_t Pin);
-void GPIO_clear_bits(GPIOPort Portx, uint16_t Pin);
-void GPIO_toggle_bits(GPIOPort Portx, uint16_t Pin);
+void gpio_init(GPIOPort Portx, uint8_t Pin, GPIOMode Mode);
+void gpio_set_bits(GPIOPort Portx, uint16_t Pin);
+void gpio_clear_bits(GPIOPort Portx, uint16_t Pin);
+void gpio_toggle_bits(GPIOPort Portx, uint16_t Pin);
 
 #endif /* GPIO_H_ */

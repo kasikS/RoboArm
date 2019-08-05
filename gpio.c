@@ -13,7 +13,7 @@
  * Pin - specifies the port pins. This parameter can be any combination of GPIOPinx where x can be (0..7).
  * Mode - output/input
  */
-void GPIO_init(GPIOPort Portx, uint8_t Pin, GPIOMode Mode)
+void gpio_init(GPIOPort Portx, uint8_t Pin, GPIOMode Mode)
 {
 	if (Mode == Output)
 	{
@@ -41,7 +41,7 @@ void GPIO_init(GPIOPort Portx, uint8_t Pin, GPIOMode Mode)
  * Portx - selected GPIO peripheral
  * Pin - specifies the port pins. This parameter can be any combination of GPIOPinx where x can be (0..7).
  */
-void GPIO_set_bits(GPIOPort Portx, uint16_t Pin)
+void gpio_set_bits(GPIOPort Portx, uint16_t Pin)
 {
 	switch(Portx)
 	{
@@ -57,7 +57,7 @@ void GPIO_set_bits(GPIOPort Portx, uint16_t Pin)
  * Portx - selected GPIO peripheral
  * Pin - specifies the port pins. This parameter can be any combination of GPIOPinx where x can be (0..7).
  */
-void GPIO_clear_bits(GPIOPort Portx, uint16_t Pin)
+void gpio_clear_bits(GPIOPort Portx, uint16_t Pin)
 {
 	switch(Portx)
 	{
@@ -73,7 +73,7 @@ void GPIO_clear_bits(GPIOPort Portx, uint16_t Pin)
  * Portx - selected GPIO peripheral
  * Pin - specifies the port pins. This parameter can be any combination of GPIOPinx where x can be (0..7).
  */
-void GPIO_toggle_bits(GPIOPort Portx, uint16_t Pin)
+void gpio_toggle_bits(GPIOPort Portx, uint16_t Pin)
 {
 	switch(Portx)
 	{
