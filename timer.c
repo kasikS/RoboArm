@@ -5,8 +5,8 @@
  *      Author: kasik
  */
 
-#include "timer.h"
 #include <stdint.h>
+#include "timer.h"
 #include <avr/io.h>
 #include "gpio.h"
 
@@ -35,17 +35,17 @@ typedef struct timerRegisters
 		uint8_t wgm2;
 		uint8_t wgm3;
 		const int *prescaler;
-		void (*cfg_wfm)(struct timerRegisters *registers);
-		int (*set_ocr)(struct timerRegisters *registers, int channel, int counts);
+		void (*cfg_wfm)(const struct timerRegisters *registers);
+		int (*set_ocr)(const struct timerRegisters *registers, uint8_t channel, uint16_t counts);
 }timerRegisters;
 
 static const int prescaler_t0[] = {0b001, 0b010, 0b011, 0b100, 0b101};
 static const int prescaler_t2[] = {0b001, 0b010, 0b100, 0b110, 0b111};
 
-static void configure_waveform_8b(timerRegisters *registers);
-static void configure_waveform_16b(timerRegisters *registers);
-static int set_ocr_8b(timerRegisters *registers, int channel, int counts);
-static int set_ocr_16b(timerRegisters *registers, int channel, int counts);
+static void configure_waveform_8b(const timerRegisters *registers);
+static void configure_waveform_16b(const timerRegisters *registers);
+static int set_ocr_8b(const timerRegisters *registers, uint8_t channel, uint16_t counts);
+static int set_ocr_16b(const timerRegisters *registers, uint8_t channel, uint16_t counts);
 
 static const timerRegisters timer0Reg =
 {
@@ -66,10 +66,10 @@ static const timerRegisters timer0Reg =
 	.wgm1 = WGM01,
 	.wgm2 = WGM02,
 	.prescaler = prescaler_t0,
-	.porta = Port_D,
-	.pina = Pin_6,
-	.portb = Port_D,
-	.pinb = Pin_5
+	.porta = portD,
+	.pina = pin6,
+	.portb = portD,
+	.pinb = pin5
 };
 
 static const timerRegisters timer1Reg =
@@ -92,10 +92,10 @@ static const timerRegisters timer1Reg =
 	.wgm2 = WGM12,
 	.wgm3 = WGM13,
 	.prescaler = prescaler_t0,
-	.porta = Port_B,
-	.pina = Pin_1,
-	.portb = Port_B,
-	.pinb = Pin_2
+	.porta = portB,
+	.pina = pin1,
+	.portb = portB,
+	.pinb = pin2
 };
 
 static const timerRegisters timer2Reg =
@@ -117,10 +117,10 @@ static const timerRegisters timer2Reg =
 	.wgm1 = WGM21,
 	.wgm2 = WGM22,
 	.prescaler = prescaler_t2,
-	.porta = Port_D,
-	.pina = Pin_3,
-	.portb = Port_B,
-	.pinb = Pin_3
+	.porta = portD,
+	.pina = pin3,
+	.portb = portB,
+	.pinb = pin3
 };
 
 static const timerRegisters *const timerRegistersArray[] = {&timer0Reg, &timer1Reg, &timer2Reg}; //try whether it can be modified!
@@ -131,8 +131,8 @@ static const timerRegisters *const timerRegistersArray[] = {&timer0Reg, &timer1R
  */
 void timer_init_gpio(Timer timer)//timerRegisters *registers)
 {
-	gpio_init(timerRegistersArray[timer]->porta, timerRegistersArray[timer]->pina, Output); // set pin of channel A as output
-	gpio_init(timerRegistersArray[timer]->portb, timerRegistersArray[timer]->pinb, Output); // set pin of channel A as output
+	gpio_init(timerRegistersArray[timer]->porta, timerRegistersArray[timer]->pina, output); // set pin of channel A as output
+	gpio_init(timerRegistersArray[timer]->portb, timerRegistersArray[timer]->pinb, output); // set pin of channel A as output
 }
 
 /*
@@ -171,12 +171,12 @@ void timer_configure_waveform(Timer timer) //timerRegisters *registers)
  * \param timer specifies the timer
  * \param prescaler specifies the value of prescaler
  */
-void timer_init(Timer timer)
+void timer_init(Timer timer, Prescaler prescaler)
 {
 	timer_init_gpio(timer);
 	timer_init_channels(timer);
 	timer_configure_waveform(timer);
-	timer_set_prescaler(timer, p1024); //~60 Hz is needed; prescaler = clock/(f*MAX_COUNT)
+	timer_set_prescaler(timer, prescaler);
 }
 
 /*
@@ -184,7 +184,7 @@ void timer_init(Timer timer)
  * \param timer specifies the timer
  * \param counts compare value
  */
-int set_ocr(Timer timer, int channel, int counts)
+int set_ocr(Timer timer, uint8_t channel, uint16_t counts)
 {
 	if (channel > 1) return 0;
 	if (counts > MAX_COUNT) return 0;
@@ -198,7 +198,7 @@ int set_ocr(Timer timer, int channel, int counts)
  * \brief configure waveform generation mode on 8bit timer
  * \praram registers timer's register structure
  */
-static void configure_waveform_8b(timerRegisters *registers)
+static void configure_waveform_8b(const timerRegisters *registers)
 {
 	*(registers->tccra) |= (1<<(registers->wgm1))| (1<<(registers->wgm0));
 	*(registers->tccrb) |= (0<<(registers->wgm2));
@@ -208,7 +208,7 @@ static void configure_waveform_8b(timerRegisters *registers)
  * \brief configure waveform generation mode on 16bit timer
  * \praram registers timer's register structure
  */
-static void configure_waveform_16b(timerRegisters *registers)
+static void configure_waveform_16b(const timerRegisters *registers)
 {
 	*(registers->tccra) |= (1<<(registers->wgm1))| (0<<(registers->wgm0));
 	*(registers->tccrb) |= (1<<(registers->wgm3))|(1<<(registers->wgm2));
@@ -219,7 +219,7 @@ static void configure_waveform_16b(timerRegisters *registers)
  * \brief sets the compare value on 8bit counter
  * \praram registers timer's register structure
  */
-static int set_ocr_8b(timerRegisters *registers, int channel, int counts)
+static int set_ocr_8b(const timerRegisters *registers, uint8_t channel, uint16_t counts)
 {
 	if (channel > 1) return 0;
 
@@ -242,7 +242,7 @@ static int set_ocr_8b(timerRegisters *registers, int channel, int counts)
  * \brief sets the compare value on 16bit counter
  * \praram registers timer's register structure
  */
-static int set_ocr_16b(timerRegisters *registers, int channel, int counts)
+static int set_ocr_16b(const timerRegisters *registers, uint8_t channel, uint16_t counts)
 {
 	if (channel > 1) return 0;
 

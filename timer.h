@@ -24,11 +24,11 @@ typedef enum
 	timer2
 }Timer;
 
-void timer_init(Timer timer);
+void timer_init(Timer timer, Prescaler prescaler);
 void timer_init_gpio(Timer timer);
 void timer_init_channels(Timer timer);
 void timer_set_prescaler(Timer timer, Prescaler prescaler);
 void timer_configure_waveform(Timer timer);
-int timer_set_ocr(Timer timer, int channel, int counts);
+int timer_set_ocr(Timer timer, int channel, uint16_t counts);
 
 #endif /* TIMER_H_ */

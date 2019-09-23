@@ -8,6 +8,7 @@
 #ifndef SERIAL_H_
 #define SERIAL_H_
 
+uint32_t itoa(uint32_t number, char stringArray[]);
 void serial_init(unsigned int baud_rate);
 void serial_putc(const char c);
 void serial_puts(const char *string);

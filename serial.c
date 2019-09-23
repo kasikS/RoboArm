@@ -4,10 +4,44 @@
  *  Created on: May 19, 2019
  *      Author: kasik
  */
-
-#include "serial.h"
 #include <stdint.h>
+#include "serial.h"
 #include <avr/io.h>
+
+/**
+ * \brief Converts an integer to array of chars
+ *
+ * \param number is an integer to be converted
+ * \param stringArray is an output array
+ */
+uint32_t itoa(uint32_t number, char stringArray[])
+{
+	uint32_t temp = 0;
+	uint32_t digits = 0;
+	uint32_t i = 0;
+
+	if (number == 0)
+	{
+		stringArray[0] = '0';
+		digits++;
+	}
+
+	while(number!=0)
+	{
+		stringArray[digits] = '0' + number % 10;
+		number = number/10;
+		digits++;
+	}
+
+	for(i=0; i< (digits/2); i++)
+	{
+		temp = stringArray[i];
+		stringArray[i] = stringArray[digits-1-i];
+		stringArray[digits-1-i] = temp;
+	}
+
+	return digits;
+}
 
 /**
  * \brief Initializes the serial port with requested baud rate.
@@ -35,6 +69,8 @@ void serial_init(unsigned int baud_rate) //configurable frame format? which uart
  */
 void serial_putc(const char c)
 {
+	/*Waits for end of transmission*/
+	while( !( UCSR0A & (1<<UDRE0)) );
 	UDR0 = c;
 }
 
@@ -47,8 +83,8 @@ void serial_puts(const char *string)
 {
 	while(*string)
 	{
-		/*Waits for end of transmission*/
-		while( !( UCSR0A & (1<<UDRE0)) );
+//		/*Waits for end of transmission*/
+//		while( !( UCSR0A & (1<<UDRE0)) );
 
 		/* Puts data into buffer, sends the data*/
 		serial_putc(*string);

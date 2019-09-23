@@ -12,32 +12,32 @@
 
 typedef enum
 {
-	Port_B = 1,
-	Port_C = 2,
-	Port_D = 3,
+	portB = 1,
+	portC = 2,
+	portD = 3,
 } GPIOPort;
 
 typedef enum
 {
-	Pin_0 = 0x01,
-	Pin_1 = 0x02,
-	Pin_2 = 0x04,
-	Pin_3 = 0x08,
-	Pin_4 = 0x10,
-	Pin_5 = 0x20,
-	Pin_6 = 0x40,
-	Pin_7 = 0x80,
+	pin0 = 0x01,
+	pin1 = 0x02,
+	pin2 = 0x04,
+	pin3 = 0x08,
+	pin4 = 0x10,
+	pin5 = 0x20,
+	pin6 = 0x40,
+	pin7 = 0x80,
 }GPIOPin;
 
 typedef enum
 {
-	Input,
-	Output
+	input,
+	output
 }GPIOMode;
 
-void gpio_init(GPIOPort Portx, uint8_t Pin, GPIOMode Mode);
-void gpio_set_bits(GPIOPort Portx, uint16_t Pin);
-void gpio_clear_bits(GPIOPort Portx, uint16_t Pin);
-void gpio_toggle_bits(GPIOPort Portx, uint16_t Pin);
+void gpio_init(GPIOPort portx, uint8_t pin, GPIOMode mode);
+void gpio_set_bits(GPIOPort portx, uint16_t pin);
+void gpio_clear_bits(GPIOPort portx, uint16_t pin);
+void gpio_toggle_bits(GPIOPort portx, uint16_t pin);
 
 #endif /* GPIO_H_ */
