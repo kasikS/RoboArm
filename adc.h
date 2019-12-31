@@ -16,7 +16,7 @@ typedef enum
 	adc3
 }adc;
 
-extern const int MAX_COUNT;
+extern const int MAX_COUNT_ADC;
 
 void adc_init(void);
 void adc_channel_init(adc adc);

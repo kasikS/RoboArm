@@ -11,7 +11,7 @@
 #include "adc.h"
 #include <avr/io.h>
 
-const int MAX_COUNT = 1023;
+const int MAX_COUNT_ADC = 1023;
 
 typedef struct
 {
@@ -81,6 +81,7 @@ uint16_t adc_read(adc adc)
 	ADMUX = adc; //select channel
 
 	ADCSRA |= 1 << 6; // start conversion
+	while(ADCSRA & (1<<6));
 	adcValue = ADCL; //read low byte
 	adcValue |= (ADCH << 8); //read high byte
 

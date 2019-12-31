@@ -10,10 +10,10 @@
 #include "timer.h"
 #include <avr/io.h>
 
-//// OCR value for 0 position
-const int MAX_POSITION = 44;
-// OCR value for 180 position
-const int MIN_POSITION = 6;
+//// OCR value for 180 position
+const int MAX_PWM = 44;
+// OCR value for 0 position
+const int MIN_PWM = 6;
 
 typedef struct
 {
@@ -24,7 +24,7 @@ typedef struct
 static const servoData servo0Data =
 {
 		.timer = timer2,
-		.channel = 1
+		.channel = 0
 };
 
 static const servoData servo1Data =
@@ -69,13 +69,13 @@ void servo_init(servo servo)
 void servo_set(servo servo, uint16_t value)
 {
 	//Check whether requested position is in bounds
-	if(value > MAX_POSITION)
+	if(value > MAX_PWM)
 	{
-		value = MAX_POSITION;
+		value = MAX_PWM;
 	}
-	else if(value < MIN_POSITION)
+	else if(value < MIN_PWM)
 	{
-		value = MIN_POSITION;
+		value = MIN_PWM;
 	}
 
 	set_ocr(servoDataArray[servo]->timer, servoDataArray[servo]->channel, value);

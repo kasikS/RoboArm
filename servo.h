@@ -16,8 +16,8 @@ typedef enum
 	servo3
 }servo;
 
-extern const int MIN_POSITION;
-extern const int MAX_POSITION;
+extern const int MIN_PWM;
+extern const int MAX_PWM;
 
 void servo_init(servo servo);
 void servo_set(servo servo, uint16_t value);
